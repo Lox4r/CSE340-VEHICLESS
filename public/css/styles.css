@@ -1,0 +1,1069 @@
+/* Mobile-first CSS for CSE Motors */
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #00bcd4;
+  --accent-color: #e74c3c;
+  --light-color: #f8f9fa;
+  --dark-color: #333;
+  --bg-dark: #1d1e40;
+  --border-gradient: repeating-linear-gradient(
+    45deg, 
+    black, 
+    black 10px, 
+    var(--secondary-color) 10px, 
+    var(--secondary-color) 20px
+  );
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  color: var(--dark-color);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header Styles */
+#top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+.siteName a {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.siteName a:hover {
+  color: var(--accent-color);
+}
+
+#tools a {
+  color: var(--primary-color);
+  text-decoration: none;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+#tools a:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* Navigation */
+nav {
+  margin-bottom: 1.5rem;
+}
+
+nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  gap: 10px;
+  background-color: var(--primary-color);
+  padding: 15px;
+  border-radius: 5px;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--light-color);
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 3px;
+  transition: all 0.3s;
+}
+
+nav a:hover {
+  color: var(--accent-color);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Main Content */
+main {
+  flex: 1;
+  padding: 1rem 0;
+}
+
+.container {
+  width: 100%;
+  padding: 0 15px;
+}
+
+h1, h2 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--secondary-color);
+}
+
+/* Base styles for contentr */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  background: white;
+}
+
+/* Removes the chess background if it was active */
+body {
+  background: white !important;
+}
+
+/* Mobile design (single column) */
+.container h1 {
+  color: #2c3e50;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #00bcd4;
+}
+
+.container img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.container p {
+  margin-bottom: 1.2rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.container strong {
+  color: #2c3e50;
+  font-weight: 600;
+  min-width: 100px;
+  display: inline-block;
+}
+
+.price {
+  font-size: 1.5rem;
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.description {
+  line-height: 1.6;
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #00bcd4;
+  margin-top: 1rem;
+}
+
+.error {
+  color: #e74c3c;
+  font-weight: bold;
+  padding: 15px;
+  background-color: #fdeaea;
+  border-radius: 8px;
+}
+
+/* Desktop design (2 columns) */
+@media (min-width: 992px) {
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+    padding: 40px;
+  }
+
+  .container h1 {
+    grid-column: 1 / -1;
+    font-size: 2.2rem;
+    margin-top: 0;
+  }
+
+  .container img {
+    position: sticky;
+    top: 20px;
+    margin-bottom: 0;
+  }
+
+  .vehicle-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Hero Section */
+.hero {
+  position: relative;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hero-content {
+  position: relative;
+}
+
+.car-details {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: rgba(255, 255, 255, 0.85);
+  padding: 1.5rem;
+  max-width: 300px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.hero-content img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.features {
+  list-style: none;
+  margin: 1rem 0;
+  color: var(--secondary-color);
+}
+
+.features li {
+  margin-bottom: 0.5rem;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.features li:before {
+  content: "•";
+  color: var(--accent-color);
+  position: absolute;
+  left: 0;
+}
+
+.action-button {
+  background-color: var(--secondary-color);
+  border: none;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: all 0.3s;
+  margin-top: 1rem;
+  display: inline-block;
+}
+
+.action-button:hover {
+  background-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Upgrades Section */
+.upgrades {
+  margin-bottom: 2rem;
+}
+
+.upgrade-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.upgrade-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.upgrade-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.upgrade-item img {
+  width: 100%;
+  max-width: 100px;
+  height: auto;
+  background-color: var(--secondary-color);
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 50%;
+}
+
+.upgrade-item a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.upgrade-item a:hover {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+/* Reviews Section */
+.reviews {
+  margin-bottom: 2rem;
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.review-list {
+  list-style: none;
+}
+
+.review-list li {
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.review-list li:before {
+  content: "»";
+  color: var(--secondary-color);
+  position: absolute;
+  left: 0;
+}
+
+/* Footer */
+footer {
+  background-color: var(--bg-dark);
+  color: white;
+  text-align: center;
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+footer a {
+  color: var(--secondary-color);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+footer a:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+.copyright {
+  margin-bottom: 0.5rem;
+}
+
+/* Error Page */
+.error {
+  color: var(--accent-color);
+  font-weight: bold;
+  margin: 1rem 0;
+}
+
+.error-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.error-content {
+  text-align: center;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 1.2rem;
+  margin: 1rem 0;
+}
+
+.error-details {
+  margin-top: 2rem;
+  text-align: left;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 4px;
+  border-left: 4px solid #dc3545;
+}
+
+/* General style for logging in */
+.flash-message {
+  color: #f44336;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.1em;
+}
+
+form {
+  max-width: 400px;
+  width: 100%;
+  margin: auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+  outline: none;
+}
+
+input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  font-size: 1.1em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Style for the registration link */
+p {
+  text-align: center;
+  font-size: 0.9em;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 600px) {
+  form {
+    max-width: 100%;
+    padding: 15px;
+  }
+
+  input, button {
+    font-size: 1em;
+  }
+
+  button {
+    padding: 10px;
+  }
+}
+
+.success-message {
+  color: green;
+  background-color: #d4edda;
+  padding: 10px;
+  border: 1px solid #c3e6cb;
+  border-radius: 5px;
+  margin: 10px auto;
+  width: 80%;
+  text-align: center;
+}
+
+.error-message {
+  color: red;
+  background-color: #f8d7da;
+  padding: 10px;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  margin: 10px auto;
+  width: 80%;
+  text-align: center;
+}
+
+/* Account Management Styles */
+.account-management {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.account-management h1 {
+  color: #2c3e50;
+  border-bottom: 2px solid #00bcd4;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.flash-message {
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  background-color: #dff0d8;
+  color: #3c763d;
+  border: 1px solid #d6e9c6;
+  border-radius: 4px;
+}
+
+.review-link {
+  margin-top: 1em;
+  text-align: center;
+}
+.review-link .button {
+  display: inline-block;
+  padding: 0.5em 1em;
+  background-color: #004080;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+.review-link .button:hover {
+  background-color: #0059b3;
+}
+
+.reviews ul {
+  list-style: none;
+  padding: 0;
+}
+
+.reviews li {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+}
+
+.errors {
+  color: red;
+  list-style: square;
+}
+
+/* General style of content */
+main {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 1rem 2rem;
+  background-color: #fff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+/* Titles */
+main h1 {
+  font-size: 2rem;
+  color: #003366;
+  border-bottom: 2px solid #00bcd4;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+main h2 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  color: #333;
+}
+
+/* Flash messages*/
+.messages {
+  background-color: #e0f7fa;
+  padding: 1rem;
+  border-left: 4px solid #00796b;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
+
+.flash-message {
+  color: #004d40;
+  margin: 0;
+}
+
+/* Links to add */
+.manage-inventory ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.manage-inventory li a {
+  display: inline-block;
+  background-color: #007acc;
+  color: white;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.manage-inventory ul li a:hover {
+  background-color: #005fa3;
+}
+
+/* Sort selector */
+#classificationList {
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Responsive Design */
+@media screen and (min-width: 600px) {
+  #classificationList {
+    margin: 5rem 0;
+  }
+
+/* Inventory table */
+#inventoryDisplay {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#inventoryDisplay thead {
+  background-color: #003366;
+  color: white;
+}
+
+#inventoryDisplay th,
+#inventoryDisplay td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+#inventoryDisplay tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Links within the table */
+#inventoryDisplay a {
+  color: #007acc;
+  text-decoration: none;
+}
+
+#inventoryDisplay a:hover {
+  text-decoration: underline;
+}
+
+/* NoScript mensaje */
+noscript {
+  display: block;
+  margin-top: 2rem;
+  background-color: #ffe0e0;
+  padding: 1rem;
+  border-left: 4px solid red;
+  color: #900;
+  font-weight: bold;
+}
+
+.inventory-controls {
+  margin-top: 1rem;
+}
+
+/* Style for the registration form */
+form {
+  max-width: 400px;
+  width: 100%;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+  outline: none;
+}
+
+input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  font-size: 1.1em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+p {
+  text-align: center;
+  font-size: 0.9em;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 600px) {
+  form {
+    max-width: 100%;
+    padding: 15px;
+  }
+  input, button {
+    font-size: 1em;
+  }
+  button {
+    padding: 10px;
+  }
+}
+
+/* Responsive Design */
+@media screen and (min-width: 768px) {
+  #wrapper {
+    padding: 0 30px;
+  }
+
+  main {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas:
+      "heading heading"
+      "hero reviews"
+      "upgrades reviews";
+    gap: 2rem;
+  }
+
+  h1 {
+    grid-area: heading;
+  }
+
+  .hero {
+    grid-area: hero;
+  }
+
+  .reviews {
+    grid-area: reviews;
+  }
+
+  .upgrades {
+    grid-area: upgrades;
+  }
+
+  .upgrade-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .vehicle-content {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Main container */
+.inventory-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Title */
+.inventory-title {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #00bcd4;
+}
+
+/* Vehicle grid */
+#inv-display {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display:grid;
+  gap: 25px;
+}
+
+/* Mobile: 1 column */
+#inv-display {
+  grid-template-columns: 1fr;
+}
+
+/* Tablet: 2 columns */
+@media (min-width: 600px) {
+  #inv-display {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop: 3 columns */
+@media (min-width: 900px) {
+  #inv-display {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  body:not(.home-page) .inventory-container {
+    background: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    border-radius: 8px;
+  }
+}
+
+/* Styles for each vehicle card */
+#inv-display li {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+#inv-display li:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+#inv-display a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Image of the vehicle */
+#inv-display img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Vehicle information */
+.namePrice {
+  padding: 15px;
+  text-align: center;
+}
+
+.namePrice h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: #2c3e50;
+}
+
+.namePrice .price {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #e74c3c;
+}
+
+/* If there are no vehicles */
+.no-vehicles {
+  text-align: center;
+  padding: 2rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+  margin-top: 2rem;
+}
+
+
+/* Desktop layout - Only for screens larger than 768px */
+@media screen and (min-width: 768px) {
+  body {
+    background-image: url('/images/site/checkerboard.jpg');
+    background-repeat: repeat;
+    background-attachment: fixed;
+    background-color: #f5f5f5;
+    position: relative;
+  }
+
+  /* Add a pseudo-element to darken the background if necessary. */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.85);
+    z-index: -1;
+  }
+
+  #wrapper {
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    min-height: 100vh;
+  }
+}
+
+  .car-details {
+    max-width: 400px;
+    padding: 2rem;
+  }
+
+  .upgrade-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+#inv-display {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+#inv-display li {
+  border: 1px solid #d9e2ec;
+  border-radius: 10px;
+  padding: 1rem;
+  background: #fff;
+}
+
+#inv-display img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.vehicle-detail-view {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.vehicle-detail-image img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+}
+
+.vehicle-detail-content {
+  background: #f8f9fa;
+  border: 1px solid #d9e2ec;
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.vehicle-detail-price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #c0392b;
+  margin-bottom: 1rem;
+}
+
+.vehicle-detail-specs {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.25rem 0;
+}
+
+.vehicle-detail-specs li {
+  padding: .75rem 0;
+  border-bottom: 1px solid #dde7ef;
+}
+
+.vehicle-detail-description h2 {
+  border: 0;
+  padding-bottom: 0;
+  margin-bottom: .5rem;
+}
+
+.vehicle-detail-review-link a {
+  display: inline-block;
+  margin-top: 1rem;
+  background: #2c3e50;
+  color: #fff;
+  padding: .75rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.error-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.error-page-message {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+footer {
+  margin-top: 2rem;
+  padding: 1rem 0 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+@media (min-width: 768px) {
+  .vehicle-detail-view {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  }
+}
