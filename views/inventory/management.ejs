@@ -1,40 +1,20 @@
-<%- include('../partials/head') %>
-<%- include('../partials/header') %>
-<%- include('../partials/navigation') %>
+<h1><%= title %></h1>
+<p>Use this page to manage classification records and inventory records.</p>
 
-<main>
-  <h1>Inventory Management</h1>
-
-  <% if (messages && messages.length > 0) { %>
-    <div class="messages">
-      <% messages.forEach(message => { %>
-        <p class="flash-message"><%= message %></p>
-      <% }) %>
-    </div>
-  <% } %>
-
-  <div class="manage-inventory">
+<section class="management-links">
   <ul>
-    <li><a href="/inv/add-classification">Add New Classification</a></li>
-    <li><a href="/inv/add-inventory">Add New Inventory</a></li>
+    <li><a href="/inv/add-classification" title="Add a new classification">Add New Classification</a></li>
+    <li><a href="/inv/add-inventory" title="Add a new inventory item">Add New Inventory Item</a></li>
   </ul>
+</section>
 
-    <h2>Manage Inventory</h2>
-    <p>Select a classification from the list to see the items belonging to it.</p>
-  </div>
-
-
-  <div class="inventory-controls">
-    <%- classificationSelect %>
-    <table id="inventoryDisplay"></table>
-  </div>
-
+<section class="inventory-controls">
+  <h2>Inventory Tools</h2>
+  <p>Select a classification to review and manage inventory items.</p>
+  <label for="classificationList">Choose a classification</label>
+  <%- classificationSelect %>
   <table id="inventoryDisplay"></table>
+  <noscript>JavaScript must be enabled to use the inventory management table.</noscript>
+</section>
 
-  <noscript>JavaScript must be enabled to use this page.</noscript>
-
-</main>
-
-<script src="../js/inventory.js"></script>
-
-<%- include('../partials/footer') %>
+<script src="/js/inventory.js"></script>

@@ -1,85 +1,100 @@
-const { body, validationResult } = require("express-validator");
+const { body, validationResult } = require("express-validator")
+const utilities = require("./index")
 
-/********************************
- * Validation for classification
- ****************************** */
-const checkClassification = [
+const classificationRules = () => [
   body("classification_name")
     .trim()
-    .notEmpty().withMessage("Classification name is required.")
-    .matches(/^[a-zA-Z0-9\s]+$/).withMessage("Only letters, numbers, and spaces are allowed."),
-  
-  (req, res, next) => {
-    console.log("✅ checkClassification middleware executed");  
-    console.log("🔹 Data received:", req.body);  
+    .notEmpty()
+    .withMessage("Please provide a classification name.")
+    .matches(/^[A-Za-z0-9]+$/)
+    .withMessage("Classification name cannot contain spaces or special characters."),
+]
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      console.log("❌ Validation errors:", errors.array());  
-      req.flash("error", errors.array().map(err => err.msg).join(" "));
-      return res.redirect("/inv/add-classification");
-    }
-    
-    next();
-  }
-];
-
-/*************************
- * Rules for new vehicle
- ********************** */
-const newInventoryRules = () => {
-  return [
-    body("inv_make")
-      .trim()
-      .notEmpty().withMessage("Make is required."),
-    body("inv_model")
-      .trim()
-      .notEmpty().withMessage("Model is required."),
-    body("inv_year")
-      .trim()
-      .isInt({ min: 1900, max: 2100 }).withMessage("Enter a valid year."),
-    body("inv_description")
-      .trim()
-      .notEmpty().withMessage("Description is required."),
-    body("inv_image")
-      .trim()
-      .notEmpty().withMessage("Image path is required."),
-    body("inv_thumbnail")
-      .trim()
-      .notEmpty().withMessage("Thumbnail path is required."),
-    body("inv_price")
-      .trim()
-      .isFloat({ min: 0 }).withMessage("Enter a valid price."),
-    body("inv_miles")
-      .trim()
-      .isInt({ min: 0 }).withMessage("Miles must be a positive number."),
-    body("inv_color")
-      .trim()
-      .notEmpty().withMessage("Color is required."),
-    body("classification_id")
-      .notEmpty().withMessage("Please select a classification.")
-  ];
-};
-
-/********************************
- * Middleware for adding vehicle
- ***************************** */
-const checkInventoryData = async (req, res, next) => {
-  const { classification_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color } = req.body;
-
-  const errors = validationResult(req);
+const checkClassification = async (req, res, next) => {
+  const { classification_name } = req.body
+  const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    const nav = await require("./index").getNav();
-    const classificationSelect = await require("../models/inventory-model").buildClassificationList(classification_id);
-
-    req.flash("error", errors.array().map(err => err.msg).join(" "));
-
-    return res.render("inventory/add-inventory", {
-      title: "Add Inventory",
+    const nav = await utilities.getNav()
+    return res.status(400).render("inventory/add-classification", {
+      title: "Add New Classification",
       nav,
-      classificationSelect,
       errors: errors.array(),
+      classification_name,
+    })
+  }
+
+  next()
+}
+
+const newInventoryRules = () => [
+  body("classification_id")
+    .trim()
+    .notEmpty()
+    .withMessage("Please select a classification."),
+  body("inv_make")
+    .trim()
+    .notEmpty()
+    .withMessage("Please provide a vehicle make."),
+  body("inv_model")
+    .trim()
+    .notEmpty()
+    .withMessage("Please provide a vehicle model."),
+  body("inv_year")
+    .trim()
+    .isInt({ min: 1886, max: 2100 })
+    .withMessage("Please provide a valid four-digit year."),
+  body("inv_description")
+    .trim()
+    .notEmpty()
+    .withMessage("Please provide a vehicle description."),
+  body("inv_image")
+    .trim()
+    .notEmpty()
+    .withMessage("Please provide an image path."),
+  body("inv_thumbnail")
+    .trim()
+    .notEmpty()
+    .withMessage("Please provide a thumbnail path."),
+  body("inv_price")
+    .trim()
+    .isFloat({ min: 0 })
+    .withMessage("Please provide a valid price."),
+  body("inv_miles")
+    .trim()
+    .isInt({ min: 0 })
+    .withMessage("Please provide valid mileage."),
+  body("inv_color")
+    .trim()
+    .notEmpty()
+    .withMessage("Please provide a vehicle color."),
+]
+
+const checkInventoryData = async (req, res, next) => {
+  const errors = validationResult(req)
+  const {
+    classification_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+  } = req.body
+
+  if (!errors.isEmpty()) {
+    const nav = await utilities.getNav()
+    const classificationList = await utilities.buildClassificationList(classification_id)
+
+    return res.status(400).render("inventory/add-inventory", {
+      title: "Add New Vehicle",
+      nav,
+      classificationList,
+      errors: errors.array(),
+      classification_id,
       inv_make,
       inv_model,
       inv_year,
@@ -88,29 +103,35 @@ const checkInventoryData = async (req, res, next) => {
       inv_thumbnail,
       inv_price,
       inv_miles,
-      inv_color
-    });
+      inv_color,
+    })
   }
 
-  next();
-};
+  next()
+}
 
-/********************************
- * Middleware for vehicle update
- ***************************** */
 const checkUpdateData = async (req, res, next) => {
-  const { inv_id, classification_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color } = req.body;
-
-  const errors = validationResult(req);
+  const errors = validationResult(req)
+  const {
+    inv_id,
+    classification_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+  } = req.body
 
   if (!errors.isEmpty()) {
-    const nav = await require("./index").getNav();
-    const classificationSelect = await require("../models/inventory-model").buildClassificationList(classification_id);
+    const nav = await utilities.getNav()
+    const classificationSelect = await utilities.buildClassificationList(classification_id)
 
-    req.flash("error", errors.array().map(err => err.msg).join(" "));
-
-    return res.render("inventory/edit-inventory", {
-      title: "Edit " + inv_make + " " + inv_model,
+    return res.status(400).render("inventory/edit-inventory", {
+      title: `Edit ${inv_make} ${inv_model}`,
       nav,
       classificationSelect,
       errors: errors.array(),
@@ -124,16 +145,17 @@ const checkUpdateData = async (req, res, next) => {
       inv_price,
       inv_miles,
       inv_color,
-      classification_id
-    });
+      classification_id,
+    })
   }
 
-  next();
-};
+  next()
+}
 
 module.exports = {
+  classificationRules,
   checkClassification,
   newInventoryRules,
   checkInventoryData,
-  checkUpdateData
-};
+  checkUpdateData,
+}
