@@ -128,12 +128,12 @@ const checkUpdateData = async (req, res, next) => {
 
   if (!errors.isEmpty()) {
     const nav = await utilities.getNav()
-    const classificationSelect = await utilities.buildClassificationList(classification_id)
+    const classificationList = await utilities.buildClassificationList(classification_id)
 
     return res.status(400).render("inventory/edit-inventory", {
       title: `Edit ${inv_make} ${inv_model}`,
       nav,
-      classificationSelect,
+      classificationList,
       errors: errors.array(),
       inv_id,
       inv_make,

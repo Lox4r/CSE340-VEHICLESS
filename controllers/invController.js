@@ -5,11 +5,11 @@ const invCont = {}
 
 invCont.showManagementView = async function (req, res) {
   const nav = await utilities.getNav()
-  const classificationSelect = await utilities.buildClassificationList()
+  const classificationList = await utilities.buildClassificationList()
   res.render("inventory/management", {
     title: "Inventory Management",
     nav,
-    classificationSelect,
+    classificationList,
   })
 }
 
@@ -175,13 +175,13 @@ invCont.editInventoryView = async function (req, res) {
   const inv_id = Number(req.params.inv_id)
   const nav = await utilities.getNav()
   const itemData = await invModel.getInventoryById(inv_id)
-  const classificationSelect = await utilities.buildClassificationList(itemData.classification_id)
+  const classificationList = await utilities.buildClassificationList(itemData.classification_id)
   const itemName = `${itemData.inv_make} ${itemData.inv_model}`
 
   res.render("inventory/edit-inventory", {
     title: "Edit " + itemName,
     nav,
-    classificationSelect,
+    classificationList,
     errors: null,
     inv_id: itemData.inv_id,
     inv_make: itemData.inv_make,
@@ -239,7 +239,7 @@ invCont.updateInventory = async function (req, res) {
   res.status(501).render("inventory/edit-inventory", {
     title: "Edit " + itemName,
     nav,
-    classificationSelect,
+    classificationList,
     errors: null,
     inv_id,
     inv_make,
