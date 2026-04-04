@@ -160,6 +160,16 @@ function handleJWTHeader(req, res, next) {
   next()
 }
 
+
+function requireEmployeeOrAdmin(req, res, next) {
+  const account = res.locals.accountData
+  if (account && (account.account_type === "Employee" || account.account_type === "Admin")) {
+    return next()
+  }
+  req.flash("notice", "Please log in with an employee or admin account to continue.")
+  return res.redirect("/account/login")
+}
+
 function checkLogin(req, res, next) {
   const token = req.cookies && req.cookies.jwt
   if (!token) {
@@ -189,4 +199,5 @@ module.exports = {
   checkJWTToken,
   handleJWTHeader,
   checkLogin,
+  requireEmployeeOrAdmin,
 }

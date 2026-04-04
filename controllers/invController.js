@@ -233,7 +233,7 @@ invCont.updateInventory = async function (req, res) {
     return res.redirect("/inv/")
   }
 
-  const classificationSelect = await utilities.buildClassificationList(classification_id)
+  const classificationList = await utilities.buildClassificationList(classification_id)
   const itemName = `${inv_make} ${inv_model}`
   req.flash("notice", "Sorry, the update failed.")
   res.status(501).render("inventory/edit-inventory", {

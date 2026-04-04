@@ -1,10 +1,18 @@
-<%- include('../partials/head', { title: 'Update Account Information' }) %>
+<%- include('../partials/head', { title }) %>
 <body>
   <%- include('../partials/header') %>
   <%- include('../partials/navigation', { nav }) %>
 
   <main class="container">
-    <h1>Update Account Information</h1>
+    <h1><%= title %></h1>
+
+    <% if (messages && messages.notice) { %>
+      <div class="flash-message">
+        <% messages.notice.forEach(msg => { %>
+          <p><%= msg %></p>
+        <% }) %>
+      </div>
+    <% } %>
 
     <% if (errors && errors.length > 0) { %>
       <div class="errors">
@@ -16,41 +24,38 @@
       </div>
     <% } %>
 
-    <form action="/account/update" method="post">
-      <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
+    <section class="account-update-section">
+      <h2>Account Update</h2>
+      <form action="/account/update" method="post">
+        <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
 
-      <div class="form-group">
-        <label for="account_firstname">First Name:</label>
-        <input type="text" id="account_firstname" name="account_firstname" required value="<%= accountData.account_firstname %>">
-      </div>
+        <label for="account_firstname">First Name</label>
+        <input type="text" id="account_firstname" name="account_firstname" required value="<%= account_firstname || accountData.account_firstname %>">
 
-      <div class="form-group">
-        <label for="account_lastname">Last Name:</label>
-        <input type="text" id="account_lastname" name="account_lastname" required value="<%= accountData.account_lastname %>">
-      </div>
+        <label for="account_lastname">Last Name</label>
+        <input type="text" id="account_lastname" name="account_lastname" required value="<%= account_lastname || accountData.account_lastname %>">
 
-      <div class="form-group">
-        <label for="account_email">Email:</label>
-        <input type="hidden" name="current_account_email" value="<%= accountData.account_email %>">
-        <input type="email" id="account_email" name="account_email" required value="<%= accountData.account_email %>">
-      </div>
+        <label for="account_email">Email</label>
+        <input type="email" id="account_email" name="account_email" required value="<%= account_email || accountData.account_email %>">
 
-      <button type="submit">Update Account</button>
-    </form>
+        <button type="submit">Update Account</button>
+      </form>
+    </section>
 
     <hr>
 
-    <form action="/account/updatePassword" method="post">
-      <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
+    <section class="password-update-section">
+      <h2>Change Password</h2>
+      <p>Enter a new password to change your current password. Password must be at least 12 characters long and include uppercase, lowercase, numbers, and symbols.</p>
+      <form action="/account/update-password" method="post">
+        <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
 
-      <div class="form-group">
-        <label for="new_password">New Password:</label>
-        <input type="password" id="new_password" name="new_password" required>
-        <small>Password must be at least 12 characters, and include at least 1 uppercase letter, 1 number, and 1 symbol.</small>
-      </div>
+        <label for="account_password">New Password</label>
+        <input type="password" id="account_password" name="account_password" required pattern="(?=.{12,})(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).*">
 
-      <button type="submit">Change Password</button>
-    </form>
+        <button type="submit">Update Password</button>
+      </form>
+    </section>
   </main>
 
   <%- include('../partials/footer') %>
