@@ -211,3 +211,5 @@ module.exports = {
   checkLogin,
   requireEmployeeOrAdmin,
 }
+
+// This is a single-line comment//

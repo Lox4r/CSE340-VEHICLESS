@@ -234,3 +234,5 @@ module.exports = {
   updatePassword,
   logout,
 };
+
+// This is a single-line comment//
