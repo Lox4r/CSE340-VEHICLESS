@@ -96,7 +96,17 @@ async function accountLogin(req, res, next) {
       return res.status(400).redirect("/account/login");
     }
 
-    const isMatch = await bcrypt.compare(account_password, account.account_password);
+    let isMatch = false;
+
+    if (account.account_password && account.account_password.startsWith("$2")) {
+      isMatch = await bcrypt.compare(account_password, account.account_password);
+    } else {
+      isMatch = account_password === account.account_password;
+      if (isMatch) {
+        await accountModel.migrateLegacyPasswordIfNeeded(account.account_id, account_password);
+      }
+    }
+
     if (!isMatch) {
       req.flash("notice", "Please check your credentials and try again.");
       return res.status(400).redirect("/account/login");

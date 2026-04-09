@@ -39,6 +39,24 @@ async function getAccountByEmail(account_email) {
   }
 }
 
+
+async function migrateLegacyPasswordIfNeeded(account_id, plainPassword) {
+  try {
+    const hashedPassword = await bcrypt.hash(plainPassword, 10);
+    const sql = `
+      UPDATE account
+      SET account_password = $1
+      WHERE account_id = $2
+      RETURNING account_id;
+    `;
+    const result = await pool.query(sql, [hashedPassword, account_id]);
+    return result.rows[0];
+  } catch (error) {
+    console.error("Error migrating legacy password:", error);
+    throw error;
+  }
+}
+
 async function getAccountById(account_id) {
   try {
     const sql = 'SELECT account_id, account_firstname, account_lastname, account_email, account_type FROM account WHERE account_id = $1';
@@ -100,5 +118,6 @@ module.exports = {
   getAccountById,
   updateAccountInfo,
   updateAccountPassword,
-  checkEmailExistsForOtherAccounts
+  checkEmailExistsForOtherAccounts,
+  migrateLegacyPasswordIfNeeded
 };
