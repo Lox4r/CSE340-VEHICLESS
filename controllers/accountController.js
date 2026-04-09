@@ -86,37 +86,42 @@ async function registerAccount(req, res, next) {
   }
 }
 
-async function accountLogin(req, res, next) {
+async function accountLogin(req, res) {
+  const { account_email, account_password } = req.body
+  const bcrypt = require("bcryptjs")
+
   try {
-    const { account_email, account_password } = req.body;
-    const account = await accountModel.getAccountByEmail(account_email);
+    const account = await accountModel.getAccountByEmail(account_email)
 
     if (!account) {
-      req.flash("notice", "Please check your credentials and try again.");
-      return res.status(400).redirect("/account/login");
+      req.flash("notice", "Invalid email or password.")
+      return res.status(400).render("account/login", {
+        title: "Login",
+        account_email,
+      })
     }
 
-    let isMatch = false;
+    const passwordMatch = await bcrypt.compare(
+      account_password,
+      account.account_password
+    )
 
-    if (account.account_password && account.account_password.startsWith("$2")) {
-      isMatch = await bcrypt.compare(account_password, account.account_password);
-    } else {
-      isMatch = account_password === account.account_password;
-      if (isMatch) {
-        await accountModel.migrateLegacyPasswordIfNeeded(account.account_id, account_password);
-      }
+    if (!passwordMatch) {
+      req.flash("notice", "Invalid email or password.")
+      return res.status(400).render("account/login", {
+        title: "Login",
+        account_email,
+      })
     }
 
-    if (!isMatch) {
-      req.flash("notice", "Please check your credentials and try again.");
-      return res.status(400).redirect("/account/login");
-    }
-
-    const token = buildToken(account);
-    setJwtCookie(res, token);
-    return res.redirect("/account/");
+    req.session.account = account
+    return res.redirect("/account/")
   } catch (error) {
-    next(error);
+    console.error("LOGIN ERROR:", error)
+    return res.status(500).render("errors/error", {
+      title: "Server Error",
+      message: "Something went wrong.",
+    })
   }
 }
 
