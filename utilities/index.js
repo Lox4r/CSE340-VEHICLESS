@@ -128,7 +128,7 @@ const checkJWTToken = (req, res, next) => {
       (err, accountData) => {
         if (err) {
           req.flash("notice", "Please log in")
-          res.clearCookie("jwt")
+          res.clearCookie("jwt", { path: "/" })
           return res.redirect("/account/login")
         }
         res.locals.accountData = accountData
@@ -151,7 +151,7 @@ function handleJWTHeader(req, res, next) {
     } catch (error) {
       res.locals.loggedin = false
       res.locals.accountData = null
-      res.clearCookie("jwt")
+      res.clearCookie("jwt", { path: "/" })
     }
   } else {
     res.locals.loggedin = false
@@ -171,6 +171,12 @@ function requireEmployeeOrAdmin(req, res, next) {
 }
 
 function checkLogin(req, res, next) {
+  if (req.session && req.session.loggedin && req.session.accountData) {
+    res.locals.loggedin = true
+    res.locals.accountData = req.session.accountData
+    return next()
+  }
+
   const token = req.cookies && req.cookies.jwt
   if (!token) {
     req.flash("notice", "Please log in to access this page.")
@@ -181,11 +187,15 @@ function checkLogin(req, res, next) {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
     res.locals.loggedin = true
     res.locals.accountData = decoded
-    next()
+    if (req.session) {
+      req.session.loggedin = true
+      req.session.accountData = decoded
+    }
+    return next()
   } catch (error) {
     res.locals.loggedin = false
     req.flash("notice", "Please log in again.")
-    res.clearCookie("jwt")
+    res.clearCookie("jwt", { path: "/" })
     return res.redirect("/account/login")
   }
 }
