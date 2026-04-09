@@ -8,7 +8,6 @@ const inventoryRoute = require("./routes/inventoryRoute");
 const utilities = require("./utilities");
 const db = require("./database/index");
 const session = require("express-session");
-const pool = require("./database/");
 const flash = require("connect-flash");
 const accountRoute = require("./routes/accountRoute");
 const cookieParser = require("cookie-parser");
@@ -18,8 +17,6 @@ app.use(expressLayouts);
 app.set("layout", "./layouts/layout");
 
 app.use(cookieParser());
-app.use(utilities.checkJWTToken);
-app.use(utilities.handleJWTHeader);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -30,13 +27,16 @@ app.use(
     resave: false,
     saveUninitialized: false,
   })
-)
+);
 
 app.use(flash());
 app.use((req, res, next) => {
   res.locals.messages = req.flash();
   next();
 });
+
+app.use(utilities.checkJWTToken);
+app.use(utilities.handleJWTHeader);
 
 app.use(express.static("public"));
 app.use(staticRoutes);
@@ -54,9 +54,10 @@ app.use((req, res, next) => {
 app.use(async (err, req, res, next) => {
   const nav = await utilities.getNav();
   const status = err.status || 500;
-  const message = status === 404
-    ? err.message
-    : "Sorry, the server encountered an unexpected error.";
+  const message =
+    status === 404
+      ? err.message
+      : "Sorry, the server encountered an unexpected error.";
 
   console.error(`${status} error at ${req.originalUrl}: ${err.message}`);
   res.status(status).render("errors/error", {
@@ -70,8 +71,8 @@ db.query("SELECT NOW()")
   .then(() => console.log("✅ Database connected successfully"))
   .catch((err) => console.error("❌ Database connection failed:", err.message));
 
-const port = process.env.PORT || 5500
+const port = process.env.PORT || 5500;
 
 app.listen(port, () => {
-  console.log(`🚀 Server running at http://0.0.0.0:${port}`)
-})
+  console.log(`🚀 Server running at http://0.0.0.0:${port}`);
+});

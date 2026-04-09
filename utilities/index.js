@@ -120,34 +120,51 @@ const buildClassificationGrid = function (data) {
   return '<p class="notice">Sorry, no matching vehicles could be found.</p>'
 }
 
+const jwtSecret = process.env.ACCESS_TOKEN_SECRET || process.env.SESSION_SECRET || "superSecret"
+
 const checkJWTToken = (req, res, next) => {
-  if (req.cookies && req.cookies.jwt) {
-    jwt.verify(
-      req.cookies.jwt,
-      process.env.ACCESS_TOKEN_SECRET,
-      (err, accountData) => {
-        if (err) {
-          req.flash("notice", "Please log in")
-          res.clearCookie("jwt", { path: "/" })
-          return res.redirect("/account/login")
-        }
-        res.locals.accountData = accountData
-        res.locals.loggedin = 1
-        next()
-      }
-    )
-  } else {
-    next()
+  const token = req.cookies && req.cookies.jwt
+  if (!token) {
+    return next()
   }
+
+  jwt.verify(token, jwtSecret, (err, accountData) => {
+    if (err) {
+      res.clearCookie("jwt", { path: "/" })
+      res.locals.loggedin = false
+      res.locals.accountData = null
+      return next()
+    }
+
+    res.locals.accountData = accountData
+    res.locals.loggedin = true
+
+    if (req.session) {
+      req.session.loggedin = true
+      req.session.accountData = accountData
+    }
+
+    next()
+  })
 }
 
 function handleJWTHeader(req, res, next) {
+  if (req.session && req.session.loggedin && req.session.accountData) {
+    res.locals.loggedin = true
+    res.locals.accountData = req.session.accountData
+    return next()
+  }
+
   const token = req.cookies && req.cookies.jwt
   if (token) {
     try {
-      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+      const decoded = jwt.verify(token, jwtSecret)
       res.locals.loggedin = true
       res.locals.accountData = decoded
+      if (req.session) {
+        req.session.loggedin = true
+        req.session.accountData = decoded
+      }
     } catch (error) {
       res.locals.loggedin = false
       res.locals.accountData = null
@@ -162,7 +179,7 @@ function handleJWTHeader(req, res, next) {
 
 
 function requireEmployeeOrAdmin(req, res, next) {
-  const account = res.locals.accountData
+  const account = res.locals.accountData || (req.session && req.session.accountData)
   if (account && (account.account_type === "Employee" || account.account_type === "Admin")) {
     return next()
   }
@@ -184,16 +201,19 @@ function checkLogin(req, res, next) {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+    const decoded = jwt.verify(token, jwtSecret)
     res.locals.loggedin = true
     res.locals.accountData = decoded
+
     if (req.session) {
       req.session.loggedin = true
       req.session.accountData = decoded
     }
+
     return next()
   } catch (error) {
     res.locals.loggedin = false
+    res.locals.accountData = null
     req.flash("notice", "Please log in again.")
     res.clearCookie("jwt", { path: "/" })
     return res.redirect("/account/login")

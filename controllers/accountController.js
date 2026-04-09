@@ -4,6 +4,8 @@ const utilities = require("../utilities/");
 const accountModel = require("../models/account-model");
 const bcrypt = require("bcryptjs");
 
+const jwtSecret = process.env.ACCESS_TOKEN_SECRET || process.env.SESSION_SECRET || "superSecret";
+
 function buildToken(account) {
   return jwt.sign(
     {
@@ -13,7 +15,7 @@ function buildToken(account) {
       account_email: account.account_email,
       account_type: account.account_type,
     },
-    process.env.ACCESS_TOKEN_SECRET,
+    jwtSecret,
     { expiresIn: "1h" }
   );
 }
@@ -26,6 +28,17 @@ function setJwtCookie(res, token) {
     path: "/",
     maxAge: 3600000,
   });
+}
+
+function storeSession(req, account) {
+  req.session.loggedin = true;
+  req.session.accountData = {
+    account_id: account.account_id,
+    account_firstname: account.account_firstname,
+    account_lastname: account.account_lastname,
+    account_email: account.account_email,
+    account_type: account.account_type,
+  };
 }
 
 async function buildLogin(req, res, next) {
@@ -114,16 +127,11 @@ async function accountLogin(req, res, next) {
       return res.status(400).redirect("/account/login");
     }
 
-    const token = buildToken(account);
+    const refreshedAccount = await accountModel.getAccountById(account.account_id);
+    const token = buildToken(refreshedAccount || account);
     setJwtCookie(res, token);
-    req.session.loggedin = true;
-    req.session.accountData = {
-      account_id: account.account_id,
-      account_firstname: account.account_firstname,
-      account_lastname: account.account_lastname,
-      account_email: account.account_email,
-      account_type: account.account_type,
-    };
+    storeSession(req, refreshedAccount || account);
+    req.flash("notice", "You are now logged in.");
     return res.redirect("/account/");
   } catch (error) {
     next(error);
@@ -133,7 +141,8 @@ async function accountLogin(req, res, next) {
 async function buildAccountManagement(req, res, next) {
   try {
     const nav = await utilities.getNav();
-    const accountData = await accountModel.getAccountById(res.locals.accountData.account_id);
+    const activeAccount = res.locals.accountData || (req.session && req.session.accountData);
+    const accountData = await accountModel.getAccountById(activeAccount.account_id);
 
     res.render("account/account-management", {
       title: "Account Management",
@@ -148,8 +157,9 @@ async function buildAccountManagement(req, res, next) {
 
 async function buildUpdateAccountView(req, res, next) {
   try {
-    const account_id = Number(req.params.account_id || req.body.account_id || res.locals.accountData.account_id);
-    if (!account_id || account_id !== res.locals.accountData.account_id) {
+    const activeAccount = res.locals.accountData || (req.session && req.session.accountData);
+    const account_id = Number(req.params.account_id || req.body.account_id || activeAccount.account_id);
+    if (!account_id || account_id !== activeAccount.account_id) {
       req.flash("notice", "You may only edit your own account.");
       return res.redirect("/account/");
     }
@@ -184,8 +194,7 @@ async function updateAccount(req, res, next) {
     if (updatedAccount) {
       const token = buildToken(updatedAccount);
       setJwtCookie(res, token);
-      req.session.loggedin = true;
-      req.session.accountData = { ...updatedAccount };
+      storeSession(req, updatedAccount);
       req.flash("notice", "Account information updated successfully.");
       return res.redirect("/account/");
     }
@@ -218,7 +227,7 @@ async function updatePassword(req, res, next) {
 function logout(req, res) {
   res.clearCookie("jwt", { path: "/" });
   req.session.destroy(() => {
-    req.flash("notice", "You have been logged out.");
+    req.flash && req.flash("notice", "You have been logged out.");
     return res.redirect("/");
   });
 }
