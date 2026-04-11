@@ -53,7 +53,7 @@ const normalizeImagePath = (path) => {
   return cleaned
 }
 
-const buildVehicleDetailHTML = function (vehicle) {
+const buildVehicleDetailHTML = function (vehicle, loggedin = false, isSaved = false) {
   return `
     <section class="vehicle-detail-view">
       <div class="vehicle-detail-image">
@@ -71,7 +71,20 @@ const buildVehicleDetailHTML = function (vehicle) {
           <h2>Vehicle Description</h2>
           <p>${vehicle.inv_description}</p>
         </div>
-        <p class="vehicle-detail-review-link"><a href="/inv/${vehicle.inv_id}/reviews">Read or Write Reviews</a></p>
+        <div class="vehicle-detail-actions">
+          <p class="vehicle-detail-review-link"><a href="/inv/${vehicle.inv_id}/reviews">Read or Write Reviews</a></p>
+          ${loggedin ? (isSaved
+            ? `<form method="post" action="/favorites/remove">
+                <input type="hidden" name="inv_id" value="${vehicle.inv_id}">
+                <input type="hidden" name="return_to" value="detail">
+                <button type="submit">Remove from Saved Vehicles</button>
+              </form>`
+            : `<form method="post" action="/favorites/add">
+                <input type="hidden" name="inv_id" value="${vehicle.inv_id}">
+                <button type="submit">Save Vehicle</button>
+              </form>`)
+            : `<p><a href="/account/login">Log in to save this vehicle</a></p>`}
+        </div>
       </div>
     </section>
   `

@@ -1,0 +1,41 @@
+<h1><%= title %></h1>
+
+<% if (messages && messages.notice) { %>
+  <div class="flash-message">
+    <% messages.notice.forEach(msg => { %>
+      <p><%= msg %></p>
+    <% }) %>
+  </div>
+<% } %>
+
+<% if (!favorites || favorites.length === 0) { %>
+  <p>You have not saved any vehicles yet.</p>
+  <p><a href="/">Browse inventory</a> to save vehicles to your favorites list.</p>
+<% } else { %>
+  <p>These are the vehicles you have saved to review later.</p>
+
+  <ul id="inv-display">
+    <% favorites.forEach(vehicle => { %>
+      <li>
+        <a href="/inv/detail/<%= vehicle.inv_id %>" title="View <%= vehicle.inv_make %> <%= vehicle.inv_model %> details">
+          <img src="<%= vehicle.inv_thumbnail || vehicle.inv_image %>" alt="Image of <%= vehicle.inv_make %> <%= vehicle.inv_model %>">
+        </a>
+        <div class="namePrice">
+          <hr>
+          <h2>
+            <a href="/inv/detail/<%= vehicle.inv_id %>" title="View <%= vehicle.inv_make %> <%= vehicle.inv_model %> details">
+              <%= vehicle.inv_make %> <%= vehicle.inv_model %>
+            </a>
+          </h2>
+          <span>$<%= Number(vehicle.inv_price).toLocaleString('en-US') %></span>
+          <p><strong>Year:</strong> <%= vehicle.inv_year %></p>
+          <p><strong>Classification:</strong> <%= vehicle.classification_name %></p>
+          <form method="post" action="/favorites/remove">
+            <input type="hidden" name="inv_id" value="<%= vehicle.inv_id %>">
+            <button type="submit">Remove from Saved Vehicles</button>
+          </form>
+        </div>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>

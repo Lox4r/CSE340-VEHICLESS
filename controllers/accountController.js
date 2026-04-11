@@ -226,9 +226,27 @@ async function updatePassword(req, res, next) {
 
 function logout(req, res) {
   res.clearCookie("jwt", { path: "/" });
-  req.session.destroy(() => {
-    req.flash && req.flash("notice", "You have been logged out.");
+  res.clearCookie("sessionId", { path: "/" });
+
+  if (!req.session) {
     return res.redirect("/");
+  }
+
+  req.session.loggedin = false;
+  req.session.accountData = null;
+
+  req.session.save((saveErr) => {
+    if (saveErr) {
+      return res.redirect("/");
+    }
+
+    req.session.destroy((destroyErr) => {
+      if (destroyErr) {
+        return res.redirect("/");
+      }
+
+      return res.redirect("/");
+    });
   });
 }
 

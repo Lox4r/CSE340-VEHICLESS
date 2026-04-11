@@ -11,6 +11,7 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const accountRoute = require("./routes/accountRoute");
 const cookieParser = require("cookie-parser");
+const favoriteRoute = require("./routes/favoriteRoute");
 
 app.set("view engine", "ejs");
 app.use(expressLayouts);
@@ -44,6 +45,7 @@ app.use(staticRoutes);
 app.get("/", utilities.handleErrors(baseController.buildHome));
 app.use("/inv", inventoryRoute);
 app.use("/account", accountRoute);
+app.use("/favorites", favoriteRoute);
 
 app.use((req, res, next) => {
   const err = new Error("Sorry, we couldn't find that page.");
