@@ -173,7 +173,7 @@ function handleJWTHeader(req, res, next) {
     try {
       const decoded = jwt.verify(token, jwtSecret)
       res.locals.loggedin = true
-      res.locals.accountData = decoded
+      res.locals.accountData = decoded || null
       if (req.session) {
         req.session.loggedin = true
         req.session.accountData = decoded
@@ -216,7 +216,7 @@ function checkLogin(req, res, next) {
   try {
     const decoded = jwt.verify(token, jwtSecret)
     res.locals.loggedin = true
-    res.locals.accountData = decoded
+    res.locals.accountData = decoded || null
 
     if (req.session) {
       req.session.loggedin = true

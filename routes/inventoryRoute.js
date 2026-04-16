@@ -8,7 +8,7 @@ const utilities = require("../utilities")
 
 router.get("/", utilities.checkLogin, utilities.requireEmployeeOrAdmin, utilities.handleErrors(invController.showManagementView))
 router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId))
-router.get("/detail/:invId", utilities.handleErrors(invController.getVehicleDetail))
+router.get("/detail/:inv_id", utilities.handleErrors(invController.buildByInventoryId))
 router.get("/trigger-error", utilities.handleErrors(invController.triggerIntentionalError))
 
 router.get("/add-classification", utilities.checkLogin, utilities.requireEmployeeOrAdmin, utilities.handleErrors(invController.showAddClassificationForm))
