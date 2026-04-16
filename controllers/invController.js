@@ -291,4 +291,10 @@ invCont.deleteInventoryItem = async function (req, res) {
   return res.redirect(`/inv/delete/${inv_id}`)
 }
 
+
+// Backward-compatible aliases for older route references
+invCont.buildByInventoryId = invCont.getVehicleDetail
+invCont.buildAddInventory = invCont.showAddInventoryForm
+invCont.addInventory = invCont.processAddInventoryForm
+
 module.exports = invCont
