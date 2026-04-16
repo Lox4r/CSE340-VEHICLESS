@@ -3,6 +3,8 @@ const router = express.Router()
 const invController = require("../controllers/invController")
 const utilities = require("../utilities")
 const validation = require("../utilities/inventory-validation")
+const reviewController = require("../controllers/reviewController")
+const reviewValidation = require("../utilities/review-validation")
 
 // PUBLIC ROUTES
 router.get(
@@ -13,6 +15,19 @@ router.get(
 router.get(
   "/detail/:invId",
   utilities.handleErrors(invController.getVehicleDetail)
+)
+
+// REVIEWS
+router.get(
+  "/:inv_id/reviews",
+  utilities.handleErrors(reviewController.showReviewForm)
+)
+
+router.post(
+  "/:inv_id/reviews",
+  reviewValidation.reviewRules(),
+  utilities.handleErrors(reviewValidation.checkReviewData),
+  utilities.handleErrors(reviewController.submitReview)
 )
 
 // MANAGEMENT (protected)

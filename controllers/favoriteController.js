@@ -36,7 +36,12 @@ async function addFavorite(req, res, next) {
       return res.redirect(`/inv/detail/${inv_id}`);
     }
 
-    await favoriteModel.addFavorite(activeAccount.account_id, inv_id);
+    const saved = await favoriteModel.addFavorite(activeAccount.account_id, inv_id);
+    if (!saved) {
+      req.flash('notice', 'Saved vehicles are not available until the favorites table is installed in the database.');
+      return res.redirect(`/inv/detail/${inv_id}`);
+    }
+
     req.flash('notice', `${vehicle.inv_make} ${vehicle.inv_model} was added to your saved vehicles.`);
     return res.redirect('/favorites');
   } catch (error) {
@@ -53,7 +58,7 @@ async function removeFavorite(req, res, next) {
     if (removed) {
       req.flash('notice', 'Vehicle removed from your saved list.');
     } else {
-      req.flash('notice', 'Saved vehicle not found.');
+      req.flash('notice', 'Saved vehicles are unavailable or the vehicle was not found.');
     }
 
     const returnTo = req.body.return_to === 'detail' ? `/inv/detail/${inv_id}` : '/favorites';
